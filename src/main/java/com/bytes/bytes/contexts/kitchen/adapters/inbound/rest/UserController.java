@@ -4,6 +4,7 @@ import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.UserRequest;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
 import com.bytes.bytes.contexts.kitchen.core.application.services.UserService;
 import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.shared.dtos.UserDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -27,7 +28,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Object> createUser(@Valid @RequestBody UserRequest userRequest){
       try {
-          User user = saveUserUseCase.createUser(userMapper.userRequestToUserEntityMapper(userRequest));
+          UserDTO user = saveUserUseCase.createUser(userMapper.userRequestToUserEntityMapper(userRequest));
           return ResponseEntity.ok().body(user);
       } catch(Exception e){
           return ResponseEntity.badRequest().body(e.getMessage());
@@ -39,7 +40,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
       try {
-          User user = saveUserUseCase.update(id, userMapper.userRequestToUserEntityMapper(userRequest));
+          UserDTO user = saveUserUseCase.update(id, userMapper.userRequestToUserEntityMapper(userRequest));
           return ResponseEntity.ok().body(user);
       } catch(Exception e) {
           return ResponseEntity.badRequest().body(e.getMessage());
@@ -50,7 +51,7 @@ public class UserController {
     @PutMapping("disable/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable Long id){
         try {
-            User user = saveUserUseCase.delete(id);
+            UserDTO user = saveUserUseCase.delete(id);
             return ResponseEntity.ok().body(user);
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

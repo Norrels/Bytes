@@ -1,49 +1,58 @@
 package com.bytes.bytes.contexts.kitchen.core.application.services;
 
 import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.TokenProviderPort;
-import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.UserServicePort;
+import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.UserRepositoryPort;
 import com.bytes.bytes.contexts.kitchen.core.domain.expections.InvalidCredentialsException;
 import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserAlreadyExistsException;
 import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserIsNotActiveException;
 import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserNotFoundException;
 import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
+import com.bytes.bytes.contexts.shared.dtos.UserDTO;
+import com.bytes.bytes.contexts.shared.services.UserServicePort;
 
-public class UserService {
-    private final UserServicePort userServicePort;
+public class UserService implements UserServicePort {
+    private final UserRepositoryPort repository;
 
     private final TokenProviderPort tokenProviderPort;
 
-    public UserService(UserServicePort saveUserPort, TokenProviderPort tokenProviderPort) {
-        this.userServicePort = saveUserPort;
-        this.tokenProviderPort = tokenProviderPort;
-    }
+    private final UserMapper mapper;
 
-    public User createUser(User user) {
-        userServicePort.findByEmail(user.getEmail()).ifPresent((u) -> {
+    public UserService(UserRepositoryPort saveUserPort, TokenProviderPort tokenProviderPort, UserMapper mapper) {
+        this.repository = saveUserPort;
+        this.tokenProviderPort = tokenProviderPort;
+        this.mapper = mapper;
+    }
+    @Override
+    public UserDTO createUser(UserDTO user) {
+        repository.findByEmail(user.getEmail()).ifPresent((u) -> {
             throw new UserAlreadyExistsException();
         });
 
         user.setActive(true);
-        return userServicePort.save(user);
+        return mapper.UserToUserDTOMapper(repository.save(mapper.userDTOToUserMapper(user)));
     }
 
-    public User update(Long id, User user) {
-        User user_db = userServicePort.findById(id).orElseThrow(UserNotFoundException::new);
+    @Override
+    public UserDTO update(Long id, UserDTO user) {
+        User user_db = repository.findById(id).orElseThrow(UserNotFoundException::new);
         user_db.setPassword(user.getPassword());
         user_db.setRole(user.getRole());
         user_db.setEmail(user.getEmail());
         user_db.setName(user.getName());
-        return userServicePort.save(user_db);
+        return mapper.UserToUserDTOMapper(repository.save(mapper.userDTOToUserMapper(user)));
     }
 
-    public User delete(Long id) {
-        User user = userServicePort.findById(id).orElseThrow(UserNotFoundException::new);
+    @Override
+    public UserDTO delete(Long id) {
+        User user = repository.findById(id).orElseThrow(UserNotFoundException::new);
         user.setActive(false);
-        return userServicePort.save(user);
+        return mapper.UserToUserDTOMapper(repository.save(user));
     }
 
+    @Override
     public String autenticate(String email, String password) {
-       User user = userServicePort.findByEmail(email)
+       User user = repository.findByEmail(email)
                 .filter(usuario -> usuario.getPassword().equals(password))
                 .orElseThrow(InvalidCredentialsException::new);
 
