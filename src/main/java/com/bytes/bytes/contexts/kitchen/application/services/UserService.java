@@ -1,12 +1,12 @@
-package com.bytes.bytes.contexts.kitchen.core.application.services;
+package com.bytes.bytes.contexts.kitchen.application.services;
 
-import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.TokenProviderPort;
-import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.UserRepositoryPort;
-import com.bytes.bytes.contexts.kitchen.core.domain.expections.InvalidCredentialsException;
-import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserAlreadyExistsException;
-import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserIsNotActiveException;
-import com.bytes.bytes.contexts.kitchen.core.domain.expections.UserNotFoundException;
-import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.kitchen.domain.port.outbound.TokenProviderPort;
+import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
+import com.bytes.bytes.contexts.kitchen.domain.execeptions.user.InvalidCredentialsException;
+import com.bytes.bytes.contexts.kitchen.domain.execeptions.user.UserAlreadyExistsException;
+import com.bytes.bytes.contexts.kitchen.domain.execeptions.user.UserIsNotActiveException;
+import com.bytes.bytes.contexts.kitchen.domain.execeptions.user.UserNotFoundException;
+import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
 import com.bytes.bytes.contexts.shared.dtos.UserDTO;
 import com.bytes.bytes.contexts.shared.services.UserServicePort;

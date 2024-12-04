@@ -1,8 +1,8 @@
 package com.bytes.bytes.contexts.kitchen.adapters.outbound.persistence.repositories;
 
 import com.bytes.bytes.contexts.kitchen.adapters.outbound.persistence.entities.UserEntity;
-import com.bytes.bytes.contexts.kitchen.core.application.port.outbound.UserRepositoryPort;
-import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
+import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
 import org.springframework.stereotype.Repository;
 

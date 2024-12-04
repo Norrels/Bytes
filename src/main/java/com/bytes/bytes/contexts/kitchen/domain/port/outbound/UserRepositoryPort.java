@@ -1,6 +1,6 @@
-package com.bytes.bytes.contexts.kitchen.core.application.port.outbound;
+package com.bytes.bytes.contexts.kitchen.domain.port.outbound;
 
-import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.kitchen.domain.models.User;
 
 import java.util.Optional;
 

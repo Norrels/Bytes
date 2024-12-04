@@ -1,4 +1,4 @@
-package com.bytes.bytes.contexts.kitchen.core.application.port.outbound;
+package com.bytes.bytes.contexts.kitchen.domain.port.outbound;
 
 public interface TokenProviderPort {
 

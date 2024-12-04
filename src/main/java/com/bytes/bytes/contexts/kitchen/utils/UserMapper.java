@@ -2,7 +2,7 @@ package com.bytes.bytes.contexts.kitchen.utils;
 
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.UserRequest;
 import com.bytes.bytes.contexts.kitchen.adapters.outbound.persistence.entities.UserEntity;
-import com.bytes.bytes.contexts.kitchen.core.domain.models.User;
+import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.shared.dtos.UserDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -22,7 +22,7 @@ public class UserMapper {
         return user;
     }
 
-    public UserDTO userRequestToUserEntityMapper(UserRequest userRequest){
+    public UserDTO userRequestToUserDTOMapper(UserRequest userRequest){
         UserDTO user = new UserDTO();
         BeanUtils.copyProperties(userRequest, user);
         return user;

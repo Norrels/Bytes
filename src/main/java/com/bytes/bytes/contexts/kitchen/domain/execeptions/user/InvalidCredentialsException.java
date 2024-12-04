@@ -1,4 +1,4 @@
-package com.bytes.bytes.contexts.kitchen.core.domain.expections;
+package com.bytes.bytes.contexts.kitchen.domain.execeptions.user;
 
 public class InvalidCredentialsException extends RuntimeException {
     public InvalidCredentialsException() {

@@ -1,4 +1,4 @@
-package com.bytes.bytes.contexts.kitchen.core.domain.models;
+package com.bytes.bytes.contexts.kitchen.domain.models;
 
 public class User {
     private Long id;
