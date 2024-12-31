@@ -20,6 +20,7 @@ public class CreateOrderUseCase {
         this.findProductByIdUseCase = findProductByIdUseCase;
     }
 
+    // poderia ser só uma lista de OrderItemDTO
     public Order execute(CreateOrderDTO order) {
         if(order.clientId() != null && !findUserByIdUseCase.execute(order.clientId())) {
             throw new RuntimeException("Cliente não encontrado");

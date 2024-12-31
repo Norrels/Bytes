@@ -4,7 +4,6 @@ import com.bytes.bytes.contexts.customer.domain.models.Customer;
 import com.bytes.bytes.contexts.customer.domain.ports.outbound.CustomerRepositoryPort;
 import com.bytes.bytes.contexts.customer.mapper.CustomerMapper;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -39,5 +38,15 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
     @Override
     public Optional<Customer> findById(Long id) {
         return repository.findById(id).map(mapper::toCustomer);
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsByCpf(String cpf) {
+        return repository.existsByCpf(cpf);
     }
 }

@@ -12,4 +12,7 @@ public interface CustomerRepositoryPort {
     Optional<Customer> findByCPF(String cpf);
 
     Optional<Customer> findById(Long id);
+
+    boolean existsByEmail(String email);
+    boolean existsByCpf(String cpf);
 }

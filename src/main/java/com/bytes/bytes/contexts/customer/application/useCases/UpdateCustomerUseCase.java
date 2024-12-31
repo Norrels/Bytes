@@ -11,9 +11,18 @@ public class UpdateCustomerUseCase {
         this.customerRepository = customerRepository;
     }
 
-    public Customer execute(Long id, Customer customer) {
-        customerRepository.findById(id).orElseThrow(CustomerNotFound::new);
-        customer.update(customer.getCpf(), customer.getEmail(), customer.getName(), customer.getPhone());
+    public Customer execute(Long id, Customer customerToUpdate) {
+        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFound::new);
+
+        if (!customer.getEmail().equals(customerToUpdate.getEmail()) && customerRepository.existsByEmail(customerToUpdate.getEmail())) {
+            throw new RuntimeException("Este email já está em uso");
+        }
+
+        if (!customer.getCpf().equals(customerToUpdate.getCpf()) && customerRepository.existsByCpf(customerToUpdate.getCpf())) {
+            throw new RuntimeException("Este CPF já está cadastrado");
+        }
+
+        customer.update(customerToUpdate.getCpf(), customerToUpdate.getEmail(), customerToUpdate.getName(), customerToUpdate.getPhone());
         return customerRepository.save(customer);
     }
 }

@@ -10,9 +10,14 @@ public class CreateCustomerUseCase {
     }
 
     public Customer execute(Customer customer) {
-        customerRepository.findByCPF(customer.getCpf()).ifPresent((u) -> {
-            throw new RuntimeException("Cliente já cadastrado");
-        });
+        if(customerRepository.existsByCpf(customer.getCpf())) {
+            throw new RuntimeException("Este CPF já está cadastrado");
+        }
+
+        if(customerRepository.existsByEmail(customer.getEmail())) {
+            throw new RuntimeException("Este email já está cadastrado");
+        }
+
         return customerRepository.save(customer);
     }
 }
