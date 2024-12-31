@@ -1,9 +1,9 @@
 package com.bytes.bytes.contexts.kitchen.adapters.outbound.persistence.repositories;
 
-import com.bytes.bytes.contexts.kitchen.adapters.outbound.persistence.entities.UserEntity;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
+
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public class UserRepositoryAdapter implements UserRepositoryPort {
     private final UserRepository repository;
+
     private final UserMapper userMapper;
 
     public UserRepositoryAdapter(UserRepository repository, UserMapper userMapper) {
@@ -20,18 +21,17 @@ public class UserRepositoryAdapter implements UserRepositoryPort {
 
     @Override
     public User save(User user) {
-        UserEntity UserEntity = userMapper.userToUserEntityMapper(user);
-        return userMapper.userEntityToUserMapper(repository.save(UserEntity));
+        return userMapper.toUser(repository.save(userMapper.toUserEntity(user)));
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return repository.findById(id).map(userMapper::userEntityToUserMapper);
+        return repository.findById(id).map(userMapper::toUser);
     }
 
     @Override
     public Optional<User> findByEmail(String email) {
-        return repository.findByEmail(email).map(userMapper::userEntityToUserMapper);
+        return repository.findByEmail(email).map(userMapper::toUser);
     }
 
 }

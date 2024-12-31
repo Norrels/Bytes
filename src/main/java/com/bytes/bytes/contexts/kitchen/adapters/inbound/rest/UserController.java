@@ -1,9 +1,10 @@
 package com.bytes.bytes.contexts.kitchen.adapters.inbound.rest;
 
+import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.TokenDTO;
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.UserRequest;
+import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
-import com.bytes.bytes.contexts.kitchen.application.services.UserService;
-import com.bytes.bytes.contexts.shared.dtos.UserDTO;
+import com.bytes.bytes.contexts.kitchen.application.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -11,35 +12,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name = "Cozinha", description = "Operações realizadas pelo estabelicimento")
+@Tag(name = "User", description = "Controle de usuários do estabelicimento")
 @RequestMapping("/kitchen/user")
 public class UserController {
-    private final UserService saveUserUseCase;
+    private final UserService userService;
 
     private final UserMapper userMapper;
 
     public UserController(UserService saveUserUseCase, UserMapper userMapper) {
-        this.saveUserUseCase = saveUserUseCase;
+        this.userService = saveUserUseCase;
         this.userMapper = userMapper;
     }
 
     @Operation(summary = "Cria usuário")
     @PostMapping()
-    public ResponseEntity<Object> createUser(@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<Object> create(@Valid @RequestBody UserRequest userRequest){
       try {
-          UserDTO user = saveUserUseCase.createUser(userMapper.userRequestToUserDTOMapper(userRequest));
+          User user = userService.createUser(userMapper.toUser(userRequest));
           return ResponseEntity.ok().body(user);
       } catch(Exception e){
           return ResponseEntity.badRequest().body(e.getMessage());
       }
     }
 
-
     @Operation(summary = "Atualiza usuário")
     @PutMapping("/{id}")
-    public ResponseEntity<Object> updateUser(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
+    public ResponseEntity<Object> update(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
       try {
-          UserDTO user = saveUserUseCase.update(id, userMapper.userRequestToUserDTOMapper(userRequest));
+          User user = userService.update(id, userMapper.toUser(userRequest));
           return ResponseEntity.ok().body(user);
       } catch(Exception e) {
           return ResponseEntity.badRequest().body(e.getMessage());
@@ -48,10 +48,10 @@ public class UserController {
 
     @Operation(summary = "Desativa usuário")
     @PutMapping("disable/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Long id){
+    public ResponseEntity<Object> delete(@PathVariable Long id){
         try {
-            UserDTO user = saveUserUseCase.delete(id);
-            return ResponseEntity.ok().body(user);
+            userService.delete(id);
+            return ResponseEntity.ok().body("Usuário desativado com sucesso");
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -61,8 +61,8 @@ public class UserController {
     @PostMapping("autenticate")
     public ResponseEntity<Object> autenticate(String email, String password){
         try {
-            String token = saveUserUseCase.autenticate(email, password);
-            return ResponseEntity.ok().body(token);
+            String token = userService.autenticate(email, password);
+            return ResponseEntity.ok().body(new TokenDTO(token));
         } catch(Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

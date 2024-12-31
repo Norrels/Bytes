@@ -8,9 +8,7 @@ public class User {
     private String password;
     private boolean active;
 
-    public User() {
-        this.active = true;
-    }
+    public User() {}
 
     public Long getId() {
         return id;
@@ -58,5 +56,33 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void update(User user){
+        this.name = user.getName();
+        this.email = user.getEmail();
+        this.password = user.getPassword();
+
+        validate();
+    }
+
+    public void validate(){
+        if(this.name == null || this.name.isEmpty()){
+            throw new IllegalArgumentException("O nome é obrigatório");
+        }
+        if(this.email == null || this.email.isEmpty()){
+            throw new IllegalArgumentException("O email é obrigatório");
+        }
+        if(this.password == null || this.password.isEmpty()){
+            throw new IllegalArgumentException("A senha é obrigatório");
+        }
+
+        if(this.password.length() < 8 || this.password.length() > 12){
+            throw new IllegalArgumentException("A senha deve ter entre 8 caracteres a 12 caracteres");
+        }
+
+        if(!this.email.contains("@") || !this.email.contains(".") || this.email.length() < 5 || this.email.contains(" ")){
+            throw new IllegalArgumentException("O email é inválido");
+        }
     }
 }
