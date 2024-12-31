@@ -1,15 +1,111 @@
 package com.bytes.bytes.contexts.order.domain.models;
 
-import com.bytes.bytes.contexts.kitchen.domain.execeptions.product.ProductInvalidDataException;
-
 import java.math.BigDecimal;
 
 public class OrderItem {
+    private Long id;
     private String name;
-    private BigDecimal price;
+    private String imgUrl;
+    private BigDecimal unitPrice;
+    private String category;
+    private String description;
     private int quantity;
     private String observation;
     private Long originalProductId;
+    private Long orderId;
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
+
+    public Long getOriginalProductId() {
+        return originalProductId;
+    }
+
+    public void setOriginalProductId(Long originalProductId) {
+        this.originalProductId = originalProductId;
+    }
+
+    public OrderItem(String name, String imgUrl, BigDecimal unitPrice, String category, String description, int quantity, String observation, Long originalProductId) {
+        this.name = name;
+        this.imgUrl = imgUrl;
+        this.unitPrice = unitPrice;
+        this.category = category;
+        this.description = description;
+        this.quantity = quantity;
+        this.observation = observation;
+        this.originalProductId = originalProductId;
+
+        validate();
+    }
 
     public void validate(){
         if(this.name == null || name.trim().isEmpty()){
@@ -20,24 +116,16 @@ public class OrderItem {
             throw new IllegalArgumentException("A quantidade do item deve ser maior que 0");
         }
 
-        if(this.price.compareTo(new BigDecimal("0")) < 1){
-            throw new ProductInvalidDataException("O preço do produto não pode ser inferior a 0 reias");
+        if(this.unitPrice.compareTo(new BigDecimal("0")) < 1){
+            throw new IllegalArgumentException("O preço do produto deve ser maior que 0");
         }
 
         if(originalProductId == null) {
-            throw new ProductInvalidDataException("O id do produto original não pode ser nulo");
+            throw new IllegalArgumentException("O id do produto original não pode ser nulo");
         }
     }
 
-    public OrderItem(String name, BigDecimal price, int quantity, String observation, Long originalProductId) {
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
-        this.observation = observation;
-        this.originalProductId = originalProductId;
-    }
-
     public BigDecimal getTotal(){
-        return this.price.multiply(BigDecimal.valueOf(this.quantity));
+        return this.unitPrice.multiply(BigDecimal.valueOf(this.quantity));
     }
 }

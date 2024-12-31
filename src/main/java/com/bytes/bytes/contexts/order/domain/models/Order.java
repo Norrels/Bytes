@@ -1,5 +1,7 @@
 package com.bytes.bytes.contexts.order.domain.models;
 
+import lombok.Builder;
+
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -21,10 +23,6 @@ public class Order {
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -61,6 +59,16 @@ public class Order {
         this.status = OrderStatus.WAITING_PAYMENT;
         this.updatedAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Order(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, OrderStatus status, Long modifyById, Long clientId, List<OrderItem> itens) {
+        this.id = id;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.status = status;
+        this.modifyById = modifyById;
+        this.clientId = clientId;
+        this.itens = itens;
     }
 
     public void updateStatus(OrderStatus status, Long modifyById) {
@@ -105,6 +113,10 @@ public class Order {
 
     public BigDecimal getTotal(){
         return this.itens.stream().map(OrderItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public void assignOrderIdToItems() {
+        itens.forEach(item -> item.setOrderId(id));
     }
 
     public Duration timeElapsedSinceLastStatus(){
