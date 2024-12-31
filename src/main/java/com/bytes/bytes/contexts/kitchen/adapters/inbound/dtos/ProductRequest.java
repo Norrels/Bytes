@@ -23,4 +23,8 @@ public class ProductRequest {
     private ProductCategory category;
 
     private String description;
+
+    private String observation;
+
+    private String imgUrl;
 }

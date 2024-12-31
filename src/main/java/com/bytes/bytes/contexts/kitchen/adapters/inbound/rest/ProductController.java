@@ -1,78 +1,89 @@
 package com.bytes.bytes.contexts.kitchen.adapters.inbound.rest;
 
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.ProductRequest;
-import com.bytes.bytes.contexts.kitchen.application.services.ProductService;
-import com.bytes.bytes.contexts.kitchen.application.services.UserService;
+import com.bytes.bytes.contexts.kitchen.application.ProductService;
+import com.bytes.bytes.contexts.kitchen.application.UserService;
+import com.bytes.bytes.contexts.kitchen.domain.models.Product;
+import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
 import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
-import com.bytes.bytes.contexts.shared.dtos.ProductDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@Tag(name = "Cozinha", description = "Operações realizadas pelo estabelicimento")
+@Tag(name = "Product", description = "Operações realizadas pelo estabelicimento em relação aos produtos")
 @RequestMapping("/kitchen/product")
 public class ProductController {
-    private final UserService userService;
-
     private final ProductService productService;
 
-    @Autowired
-    private ProductMapper productMapper;
-
-    public ProductController(UserService userService, ProductService productService) {
-        this.userService = userService;
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @Operation(summary = "Cria produto")
     @PostMapping()
-    public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductRequest productRequest){
-      try {
-          var aa = productMapper.toProductDTO(productRequest);
-          aa.setCreatedById(2L);
-          ProductDTO productDTO = productService.createProduct(aa);
-          return ResponseEntity.ok().body(productDTO);
-      } catch(Exception e){
-          return ResponseEntity.badRequest().body(e.getMessage());
-      }
+    public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+        try {
+            var productToSave = new Product(
+                    null,
+                    productRequest.getName(),
+                    productRequest.getImgUrl(),
+                    productRequest.getPrice(),
+                    productRequest.getCategory(),
+                    productRequest.getDescription(),
+                    productRequest.getObservation(),
+                    1L);
+
+            Product product = productService.createProduct(productToSave);
+            return ResponseEntity.ok().body(product);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 
-//    @Operation(summary = "Atualiza usuário")
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Object> updateUser(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
-//      try {
-//          UserDTO user = userService.update(id, userMapper.userRequestToUserDTOMapper(userRequest));
-//          return ResponseEntity.ok().body(user);
-//      } catch(Exception e) {
-//          return ResponseEntity.badRequest().body(e.getMessage());
-//      }
-//    }
-//
-//    @Operation(summary = "Desativa usuário")
-//    @PutMapping("disable/{id}")
-//    public ResponseEntity<Object> deleteUser(@PathVariable Long id){
-//        try {
-//            UserDTO user = userService.delete(id);
-//            return ResponseEntity.ok().body(user);
-//        } catch(Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
-//
-//    @Operation(summary = "Autentica usuário")
-//    @PostMapping("autenticate")
-//    public ResponseEntity<Object> autenticate(String email, String password){
-//        try {
-//            String token = userService.autenticate(email, password);
-//            return ResponseEntity.ok().body(token);
-//        } catch(Exception e) {
-//            return ResponseEntity.badRequest().body(e.getMessage());
-//        }
-//    }
+    @Operation(summary = "Atualiza produto")
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
+        try {
+            var productToUpdate = new Product(
+                    id,
+                    productRequest.getName(),
+                    productRequest.getImgUrl(),
+                    productRequest.getPrice(),
+                    productRequest.getCategory(),
+                    productRequest.getDescription(),
+                    productRequest.getObservation(),
+                    1L);
 
+            Product product = productService.updateProduct(id, productToUpdate);
+            return ResponseEntity.ok().body(product);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Deleta produto")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.ok().body("Produto deletado com sucesso");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Busca produto por categoria")
+    @GetMapping("/{category}")
+    public ResponseEntity<Object> findProductByCategory(@PathVariable String category) {
+        try {
+            return ResponseEntity.ok().body(productService.findProductByCategory(ProductCategory.fromString(category)));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

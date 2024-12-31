@@ -1,15 +1,16 @@
 package com.bytes.bytes.contexts.kitchen.domain.port.inbound;
 
-import com.bytes.bytes.contexts.shared.dtos.ProductDTO;
+import com.bytes.bytes.contexts.kitchen.domain.models.Product;
+import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
 
 import java.util.List;
 
 public interface ProductServicePort {
-    ProductDTO createProduct(ProductDTO productDTO);
+    Product createProduct(Product product);
 
-    ProductDTO updateProduct(Long id, ProductDTO productDTO);
+    Product updateProduct(Long id, Product product);
 
     void deleteProduct(Long id);
 
-    List<ProductDTO> findProductByCategory(String category);
+    List<Product> findProductByCategory(ProductCategory category);
 }

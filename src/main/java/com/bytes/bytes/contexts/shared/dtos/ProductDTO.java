@@ -21,4 +21,5 @@ public class ProductDTO {
     private ProductCategory category;
     private String description;
     private Long createdById;
+    private String observation;
 }

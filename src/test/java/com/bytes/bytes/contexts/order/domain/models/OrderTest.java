@@ -1,5 +1,6 @@
 package com.bytes.bytes.contexts.order.domain.models;
 
+import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,8 +22,8 @@ class OrderTest {
     @BeforeEach
     void setup(){
         itens = List.of(
-                new OrderItem("Milk Shake", BigDecimal.TEN, 2, "M", 8L),
-                new OrderItem("Suco Laranja", BigDecimal.TWO, 2, "M", 8L)
+                new OrderItem("Milk Shake", "milkShake.png", BigDecimal.TEN, "Acompanhemento", "Delicioso MilkShake", 2, "M", 8L),
+                new OrderItem("Suco Laranja", "sucoLaranja.png", BigDecimal.TWO, "Bebida", "Delecioso Suco", 1, "M", 8L)
         );
 
         dummyOrder = new Order(3L, itens);
@@ -52,15 +53,15 @@ class OrderTest {
 
     @Test
     @DisplayName("Shouldn't be possible to create a order if has one invalid item")
-    void shouldNotBePossibleToCreateAOrderIfHasOneInvalidItem(){
-        var itens = List.of(new OrderItem("Suco Uva", BigDecimal.TWO, 0, "M", 8L));
-        assertThrows(IllegalArgumentException.class, () -> new Order(2L, itens));
+    void shouldNotBePossibleToCreateAOrderIfHasOneInvalidItem() throws IllegalArgumentException{
+
+        assertThrows(IllegalArgumentException.class, () -> new Order(2L, List.of(new OrderItem("Suco Laranja", "sucoLaranja.png", BigDecimal.TWO, "Bebida", "Delicioso Suco", 0, "M", 8L))));
     }
 
     @Test
     @DisplayName("Should be able to get order total price")
     void shouldBePossibleToGetTotal(){
-        assertEquals(BigDecimal.valueOf(24), dummyOrder.getTotal());
+        assertEquals(BigDecimal.valueOf(22), dummyOrder.getTotal());
     }
 
     @Test

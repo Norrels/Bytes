@@ -1,7 +1,5 @@
 package com.bytes.bytes.contexts.kitchen.domain.models;
 
-import com.bytes.bytes.contexts.kitchen.domain.execeptions.product.ProductInvalidDataException;
-
 import java.math.BigDecimal;
 
 public class Product {
@@ -12,6 +10,7 @@ public class Product {
     private ProductCategory category;
     private String description;
     private Long createdById;
+    private String observation;
 
     public Long getId() {
         return id;
@@ -69,6 +68,13 @@ public class Product {
         this.description = description;
     }
 
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
+    }
 
     public void update(Product product) {
         this.name = product.getName();
@@ -76,39 +82,38 @@ public class Product {
         this.price = product.getPrice();
         this.category = product.getCategory();
         this.description = product.getDescription();
+        this.observation = product.getObservation();
 
         this.validate();
     }
 
-    public Product() {
-    }
-
-    public Product(Long id, String name, String imgUrl, BigDecimal price, ProductCategory category, String description, Long createdById) {
+    public Product(Long id, String name, String imgUrl, BigDecimal price, ProductCategory category, String description, String observation, Long createdById) {
         this.id = id;
         this.name = name;
         this.imgUrl = imgUrl;
         this.price = price;
         this.category = category;
         this.description = description;
+        this.observation = observation;
         this.createdById = createdById;
         this.validate();
     }
 
     public void validate() {
         if(this.name == null || name.trim().isEmpty()){
-            throw new ProductInvalidDataException("O nome do produto não pode ser nulo");
+            throw new IllegalArgumentException("O nome do produto não pode ser nulo");
         }
 
         if(this.category == null){
-            throw new ProductInvalidDataException("A categoria do produto não pode ser nula");
+            throw new IllegalArgumentException("A categoria do produto não pode ser nula");
         }
 
         if(price.compareTo(new BigDecimal("0")) < 1){
-            throw new ProductInvalidDataException("O preço do produto não pode ser inferior 0 reias");
+            throw new IllegalArgumentException("O preço do produto não pode ser inferior 0 reias");
         }
 
         if(createdById == null){
-            throw new ProductInvalidDataException("É preciso informa o id do usuário que está criando o produto");
+            throw new IllegalArgumentException("É preciso informa o id do usuário que está criando o produto");
         }
     }
 }
