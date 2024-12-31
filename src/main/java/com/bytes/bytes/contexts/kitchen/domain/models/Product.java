@@ -109,7 +109,7 @@ public class Product {
         }
 
         if(price.compareTo(new BigDecimal("0")) < 1){
-            throw new IllegalArgumentException("O preço do produto não pode ser inferior 0 reias");
+            throw new IllegalArgumentException("O preço do produto não pode ser inferior a 0");
         }
 
         if(createdById == null){

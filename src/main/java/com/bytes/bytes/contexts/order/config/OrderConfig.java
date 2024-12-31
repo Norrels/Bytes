@@ -39,7 +39,12 @@ public class OrderConfig {
     }
 
     @Bean
-    public OrderService orderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase, UserExistsUseCasePort userExistsUseCasePort,  PayOrderUseCase payOrderUseCase, OrderMappper orderMappper) {
-        return new OrderService(createOrderUseCase, getOrderByIdUseCase, cancelOrderUseCase, updateOrderStatusUseCase, userExistsUseCasePort, payOrderUseCase, orderMappper);
+    public GetOrderDTOByIdUseCase getOrderDTOByIdUseCase(OrderRepositoryPort orderRepositoryPort, OrderMappper orderMappper) {
+        return new GetOrderDTOByIdUseCase(orderRepositoryPort, orderMappper);
+    }
+
+    @Bean
+    public OrderService orderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase, UserExistsUseCasePort userExistsUseCasePort) {
+        return new OrderService(createOrderUseCase, getOrderByIdUseCase, cancelOrderUseCase, updateOrderStatusUseCase, userExistsUseCasePort);
     }
 }
