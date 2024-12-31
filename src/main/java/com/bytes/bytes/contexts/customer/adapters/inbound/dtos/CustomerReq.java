@@ -1,23 +1,12 @@
-package com.bytes.bytes.contexts.customer.adapters.outbound.persistence.entity;
+package com.bytes.bytes.contexts.customer.adapters.inbound.dtos;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Table(name = "Customer")
-public class CustomerEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class CustomerReq {
     @Size(min = 11, max = 11, message = "O CPF teve ter 11 números")
     private String cpf;
 

@@ -11,11 +11,15 @@ import java.util.Optional;
 
 @Repository
 public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
-    @Autowired
-    private CustomerRepository repository;
 
-    @Autowired
-    private CustomerMapper mapper;
+    private final CustomerRepository repository;
+
+    private final CustomerMapper mapper;
+
+    public CustomerRepositoryAdapter(CustomerRepository repository, CustomerMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
+    }
 
     @Override
     public Customer save(Customer c) {
@@ -29,7 +33,7 @@ public class CustomerRepositoryAdapter implements CustomerRepositoryPort {
 
     @Override
     public Optional<Customer> findByCPF(String cpf) {
-        return repository.findByCpf(cpf);
+        return repository.findByCpf(cpf).map(mapper::toCustomer);
     }
 
     @Override

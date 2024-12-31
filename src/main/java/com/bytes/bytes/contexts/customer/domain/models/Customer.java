@@ -1,13 +1,11 @@
 package com.bytes.bytes.contexts.customer.domain.models;
 
-import com.bytes.bytes.contexts.kitchen.domain.execeptions.product.ProductInvalidDataException;
-
 public class Customer {
     private Long id;
     private String cpf;
     private String email;
     private String name;
-    private String telefone;
+    private String phone;
 
     public Long getId() {
         return id;
@@ -36,12 +34,12 @@ public class Customer {
         this.name = name;
     }
 
-    public String getTelefone() {
-        return telefone;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Customer(Long id, String cpf, String email, String name, String telefone) {
@@ -49,15 +47,15 @@ public class Customer {
         this.cpf = cpf;
         this.email = email;
         this.name = name;
-        this.telefone = telefone;
+        this.phone = telefone;
         this.validate();
     }
 
-    public void update(String cpf, String email, String name, String telefone) {
+    public void update(String cpf, String email, String name, String phone) {
         this.cpf = cpf;
         this.email = email;
         this.name = name;
-        this.telefone = telefone;
+        this.phone = phone;
         this.validate();
     }
 
@@ -72,6 +70,10 @@ public class Customer {
 
         if(this.name == null || name.trim().isEmpty()){
             throw new IllegalArgumentException("O nome do cliente não pode ser nulo");
+        }
+
+        if(!this.email.contains("@") || !this.email.contains(".") || this.email.length() < 5 || this.email.contains(" ")){
+            throw new IllegalArgumentException("O email é inválido");
         }
     }
 }

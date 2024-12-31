@@ -1,29 +1,67 @@
 package com.bytes.bytes.contexts.customer.adapters.inbound.rest;
 
+import com.bytes.bytes.contexts.customer.adapters.inbound.dtos.CustomerReq;
+import com.bytes.bytes.contexts.customer.adapters.outbound.persistence.entity.CustomerEntity;
 import com.bytes.bytes.contexts.customer.application.CustomerService;
 import com.bytes.bytes.contexts.customer.domain.models.Customer;
-import com.bytes.bytes.contexts.customer.domain.ports.inbound.CustomerServicePort;
+import com.bytes.bytes.contexts.customer.mapper.CustomerMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/customer")
 @Tag(name = "Customer", description = "Endpoints de cliente")
 public class CustomerController {
-    @Autowired
-    private CustomerService customerService;
+    private final CustomerService customerService;
 
-    @Operation(summary = "Cria usuário")
+    private final CustomerMapper customerMapper;
+
+    public CustomerController(CustomerService customerService, CustomerMapper customerMapper) {
+        this.customerService = customerService;
+        this.customerMapper = customerMapper;
+    }
+
+    @Operation(summary = "Cria cliente")
     @PostMapping()
-    public ResponseEntity<Customer> createCustomer(@RequestBody Customer customerReq){
-        Customer customer = customerService.create(customerReq);
+    @Transactional
+    public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerReq customerReq){
+       try {
+           Customer customer = customerService.create(customerMapper.toCustomer(customerReq));
+           return ResponseEntity.ok().body(customer);
+       } catch (RuntimeException e){
+          return ResponseEntity.badRequest().body(e.getMessage());
+       }
+    }
 
-        return ResponseEntity.ok().body(customer);
+    @Operation(summary = "Busca cliente por CPF")
+    @GetMapping("/{cpf}")
+    public ResponseEntity<Object> findCustomerByCPF(@PathVariable String cpf){
+        try {
+            Customer customer = customerService.findByCPF(cpf);
+            return ResponseEntity.ok(customer);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @Operation(summary = "Atualiza cliente")
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerEntity customerReq){
+        try {
+            if(!Objects.equals(customerReq.getId(), id)) {
+                throw new RuntimeException("O id enviado no corpo e na url são diferentes");
+            };
+
+            Customer customer = customerService.update(id, customerMapper.toCustomer(customerReq));
+            return ResponseEntity.ok(customer);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
 }
