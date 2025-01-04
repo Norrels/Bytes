@@ -13,12 +13,14 @@ public class ProductService implements ProductServicePort {
     private final UpdateProductUseCase updateProductUseCase;
     private final DeleteProductUseCase deleteProductUseCase;
     private final FindProductByCategoryUseCase findProductByCategoryUseCase;
+    private final UpdateProductImageUseCase updateProductImageUseCase;
 
-    public ProductService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase) {
+    public ProductService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase) {
         this.createProductUseCase = createProductUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.deleteProductUseCase = deleteProductUseCase;
         this.findProductByCategoryUseCase = findProductByCategoryUseCase;
+        this.updateProductImageUseCase = updateProductImageUseCase;
     }
 
     @Override
@@ -39,5 +41,10 @@ public class ProductService implements ProductServicePort {
     @Override
     public List<Product> findProductByCategory(ProductCategory category) {
         return findProductByCategoryUseCase.execute(category);
+    }
+
+    @Override
+    public Product updateImageUrl(Long productId, String imageUrl) {
+        return updateProductImageUseCase.execute(productId, imageUrl);
     }
 }

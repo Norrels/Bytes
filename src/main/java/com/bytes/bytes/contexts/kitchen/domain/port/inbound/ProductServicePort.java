@@ -13,4 +13,6 @@ public interface ProductServicePort {
     void deleteProduct(Long id);
 
     List<Product> findProductByCategory(ProductCategory category);
+
+    Product updateImageUrl(Long productId, String imageUrl);
 }
