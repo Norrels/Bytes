@@ -37,7 +37,12 @@ public class ProductConfig {
     }
 
     @Bean
-    public ProductService productService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase) {
-        return new ProductService(createProductUseCase, updateProductUseCase, deleteProductUseCase, findProductByCategoryUseCase);
+    public UpdateProductImageUseCase updateProductImageUseCase(ProductRepositoryPort productRepositoryPort) {
+        return new UpdateProductImageUseCase(productRepositoryPort);
+    }
+
+    @Bean
+    public ProductService productService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase) {
+        return new ProductService(createProductUseCase, updateProductUseCase, deleteProductUseCase, findProductByCategoryUseCase, updateProductImageUseCase);
     }
 }
