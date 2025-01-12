@@ -6,9 +6,11 @@ import com.bytes.bytes.contexts.customer.application.CustomerService;
 import com.bytes.bytes.contexts.customer.domain.models.Customer;
 import com.bytes.bytes.contexts.customer.mapper.CustomerMapper;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +31,6 @@ public class CustomerController {
 
     @Operation(summary = "Cria cliente")
     @PostMapping()
-    @Transactional
     public ResponseEntity<Object> createCustomer(@Valid @RequestBody CustomerReq customerReq){
        try {
            Customer customer = customerService.create(customerMapper.toCustomer(customerReq));
@@ -41,6 +42,7 @@ public class CustomerController {
 
     @Operation(summary = "Busca cliente por CPF")
     @GetMapping("/{cpf}")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> findCustomerByCPF(@PathVariable String cpf){
         try {
             Customer customer = customerService.findByCPF(cpf);
@@ -52,6 +54,8 @@ public class CustomerController {
 
     @Operation(summary = "Atualiza cliente")
     @PutMapping("/{id}")
+    @SecurityRequirement(name = "jwt_auth")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerEntity customerReq){
         try {
             if(!Objects.equals(customerReq.getId(), id)) {

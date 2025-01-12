@@ -2,12 +2,17 @@ package com.bytes.bytes.contexts.kitchen.application.useCases.user;
 
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
+import org.hibernate.bytecode.internal.bytebuddy.PassThroughInterceptor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CreateUserUseCase {
     private final UserRepositoryPort userRepository;
 
-    public CreateUserUseCase(UserRepositoryPort userRepository) {
+    private final PasswordEncoder passwordEncoder;
+
+    public CreateUserUseCase(UserRepositoryPort userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User execute(User user) {
@@ -15,6 +20,7 @@ public class CreateUserUseCase {
             throw new RuntimeException("Usuário já existente");
         });
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setActive(true);
         return userRepository.save(user);
     }

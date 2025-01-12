@@ -6,17 +6,18 @@ import com.bytes.bytes.contexts.kitchen.domain.port.outbound.TokenProviderPort;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class UserConfig {
     @Bean
-    public CreateUserUseCase createUserUseCase(UserRepositoryPort userRepositoryPort) {
-        return new CreateUserUseCase(userRepositoryPort);
+    public CreateUserUseCase createUserUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder) {
+        return new CreateUserUseCase(userRepositoryPort, passwordEncoder);
     }
 
     @Bean
-    public UpdateUserUseCase updateUserUseCase(UserRepositoryPort userRepositoryPort) {
-        return new UpdateUserUseCase(userRepositoryPort);
+    public UpdateUserUseCase updateUserUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder) {
+        return new UpdateUserUseCase(userRepositoryPort, passwordEncoder);
     }
 
     @Bean
@@ -25,8 +26,8 @@ public class UserConfig {
     }
 
     @Bean
-    public AuthenticateUserUseCase authenticateUserUseCase(UserRepositoryPort userRepositoryPort, TokenProviderPort tokenProviderPort) {
-        return new AuthenticateUserUseCase(userRepositoryPort, tokenProviderPort);
+    public AuthenticateUserUseCase authenticateUserUseCase(UserRepositoryPort userRepositoryPort, TokenProviderPort tokenProviderPort, PasswordEncoder passwordEncoder) {
+        return new AuthenticateUserUseCase(userRepositoryPort, tokenProviderPort, passwordEncoder);
     }
 
     @Bean

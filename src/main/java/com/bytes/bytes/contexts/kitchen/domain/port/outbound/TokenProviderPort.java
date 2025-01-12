@@ -1,6 +1,7 @@
 package com.bytes.bytes.contexts.kitchen.domain.port.outbound;
 
-public interface TokenProviderPort {
+import java.util.List;
 
-    String generate(String subject);
+public interface TokenProviderPort {
+    String generate(String subject, List<String> roles);
 }

@@ -5,6 +5,7 @@ import com.bytes.bytes.contexts.order.application.OrderService;
 import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.order.domain.models.dtos.CreateOrderDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @Operation(summary = "Criar pedido")
+    @Operation(summary = "Cria pedido")
     @PostMapping()
     public ResponseEntity<Object> createOrder(@RequestBody CreateOrderDTO order){
         try {
@@ -32,6 +33,7 @@ public class OrderController {
 
     @Operation(summary = "Atualiza pedido")
     @PutMapping("/status")
+    @SecurityRequirement(name = "jwt_auth")
     public ResponseEntity<Object> updateStatus(@RequestBody UpdateOrderReq order){
         try {
             orderService.updateStatus(order.id(), order.status(), order.modifyById());
@@ -41,7 +43,7 @@ public class OrderController {
         }
     }
 
-    @Operation(summary = "Cancelar pedido")
+    @Operation(summary = "Cancela pedido")
     @PutMapping("/{id}")
     public ResponseEntity<Object> cancel(@PathVariable Long id, @RequestBody Long modifyById){
         try {
@@ -53,7 +55,8 @@ public class OrderController {
     }
 
 
-    @Operation(summary = "Buscar pedido por id")
+    @Operation(summary = "Busca pedido por id")
+    @SecurityRequirement(name = "jwt_auth")
     @GetMapping("/{id}")
     public ResponseEntity<Object> getById(@PathVariable Long id){
         try {
