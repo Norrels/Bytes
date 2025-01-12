@@ -3,6 +3,7 @@ package com.bytes.bytes.contexts.payment.adapters.inbound.rest;
 import com.bytes.bytes.contexts.payment.adapters.inbound.dtos.PaymentDTO;
 import com.bytes.bytes.contexts.payment.application.PaymentService;
 import com.bytes.bytes.contexts.payment.domain.models.Payment;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ public class PaymentController {
     }
 
     @PostMapping("/{orderId}/pay")
+    @Operation(summary = "Realizar pagamento")
     public ResponseEntity<Object> payOrder(@PathVariable Long orderId, @RequestBody PaymentDTO paymentOrder){
         try {
             Payment payment = paymentService.create(new Payment(null, orderId, paymentOrder.getPaymentType(), paymentOrder.getTotal(), paymentOrder.getExternal_id()));
@@ -28,6 +30,7 @@ public class PaymentController {
     }
 
     @PostMapping("/{orderId}/status")
+    @Operation(summary = "Verificar status do pagamento")
     public ResponseEntity<Object> statusOrder(@PathVariable Long orderId){
         try {
             Payment payment = paymentService.findByOrderId(orderId);

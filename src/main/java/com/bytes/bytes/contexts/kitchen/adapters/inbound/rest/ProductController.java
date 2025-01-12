@@ -9,10 +9,12 @@ import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ImageServicePort;
 import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +32,9 @@ public class ProductController {
         this.imageService = imageService;
     }
 
+    @SecurityRequirement(name = "jwt_auth")
     @Operation(summary = "Cria produto")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping()
     public ResponseEntity<Object> createProduct(@Valid @RequestBody ProductRequest productRequest) {
         try {
@@ -51,8 +55,9 @@ public class ProductController {
         }
     }
 
-
+    @SecurityRequirement(name = "jwt_auth")
     @Operation(summary = "Atualiza produto")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest) {
         try {
@@ -73,7 +78,9 @@ public class ProductController {
         }
     }
 
+    @SecurityRequirement(name = "jwt_auth")
     @Operation(summary = "Deleta produto")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteProduct(@PathVariable Long id) {
         try {
@@ -85,7 +92,7 @@ public class ProductController {
     }
 
     @Operation(summary = "Busca produto por categoria")
-    @GetMapping("/{category}")
+    @GetMapping("/category/{category}")
     public ResponseEntity<Object> findProductByCategory(@PathVariable String category) {
         try {
             return ResponseEntity.ok().body(productService.findProductByCategory(ProductCategory.fromString(category)));
@@ -94,7 +101,9 @@ public class ProductController {
         }
     }
 
+    @SecurityRequirement(name = "jwt_auth")
     @PostMapping(value = "{productId}/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "Upload de imagem")
     public ResponseEntity<Object> uploadImage(@RequestPart("file") MultipartFile file, @PathVariable("productId") Long productId){
         try {
