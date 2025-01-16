@@ -16,8 +16,8 @@ public class UserConfig {
     }
 
     @Bean
-    public UpdateUserUseCase updateUserUseCase(UserRepositoryPort userRepositoryPort) {
-        return new UpdateUserUseCase(userRepositoryPort);
+    public UpdateUserUseCase updateUserUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder) {
+        return new UpdateUserUseCase(userRepositoryPort, passwordEncoder);
     }
 
     @Bean
@@ -26,8 +26,8 @@ public class UserConfig {
     }
 
     @Bean
-    public AuthenticateUserUseCase authenticateUserUseCase(UserRepositoryPort userRepositoryPort, TokenProviderPort tokenProviderPort) {
-        return new AuthenticateUserUseCase(userRepositoryPort, tokenProviderPort);
+    public AuthenticateUserUseCase authenticateUserUseCase(UserRepositoryPort userRepositoryPort, TokenProviderPort tokenProviderPort, PasswordEncoder passwordEncoder) {
+        return new AuthenticateUserUseCase(userRepositoryPort, tokenProviderPort, passwordEncoder);
     }
 
     @Bean
