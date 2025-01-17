@@ -3,10 +3,16 @@ package com.bytes.bytes.contexts.kitchen.adapters.inbound.rest;
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.AuthUserDTO;
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.TokenDTO;
 import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.UserRequest;
+import com.bytes.bytes.contexts.kitchen.application.UserService;
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
-import com.bytes.bytes.contexts.kitchen.application.UserService;
+import com.bytes.bytes.exceptions.ErrorMessageResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -28,50 +34,72 @@ public class UserController {
     }
 
     @Operation(summary = "Cria usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = User.class)
+            )),
+            @ApiResponse(responseCode = "400", ref = "Validation"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+            @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
+    })
+    @PreAuthorize("hasRole('ADMIN')")
+    @SecurityRequirement(name = "jwt_auth")
     @PostMapping()
-    public ResponseEntity<Object> create(@Valid @RequestBody UserRequest userRequest){
-      try {
-          User user = userService.createUser(userMapper.toUser(userRequest));
-          return ResponseEntity.ok().body(user);
-      } catch(Exception e){
-          return ResponseEntity.badRequest().body(e.getMessage());
-      }
+    public ResponseEntity<Object> create(@Valid @RequestBody UserRequest userRequest) {
+        User user = userService.createUser(userMapper.toUser(userRequest));
+        return ResponseEntity.ok().body(user);
     }
 
     @Operation(summary = "Atualiza usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = User.class)
+            )),
+            @ApiResponse(responseCode = "400", ref = "Validation"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource"),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+    })
     @SecurityRequirement(name = "jwt_auth")
     @PutMapping("/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id,@Valid @RequestBody UserRequest userRequest){
-      try {
-          User user = userService.update(id, userMapper.toUser(userRequest));
-          return ResponseEntity.ok().body(user);
-      } catch(Exception e) {
-          return ResponseEntity.badRequest().body(e.getMessage());
-      }
+    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody UserRequest userRequest) {
+        User user = userService.update(id, userMapper.toUser(userRequest));
+        return ResponseEntity.ok().body(user);
     }
 
     @Operation(summary = "Desativa usuário")
     @SecurityRequirement(name = "jwt_auth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = TokenDTO.class)
+            )),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource"),
+            @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
+    })
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("disable/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id){
-        try {
-            userService.delete(id);
-            return ResponseEntity.ok().body("Usuário desativado com sucesso");
-        } catch(Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
+        userService.delete(id);
+        return ResponseEntity.ok().body("Usuário desativado com sucesso");
     }
 
     @Operation(summary = "Autentica usuário")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = TokenDTO.class)
+            )),
+            @ApiResponse(responseCode = "422", content = @Content(
+                    schema = @Schema(implementation = ErrorMessageResponse.class),
+                    examples = @ExampleObject(value = "{\"message\": \"Usuário inativo\"}")))
+    })
     @PostMapping("authenticate")
-    public ResponseEntity<Object> authenticate(@RequestBody AuthUserDTO authUserDTO){
-        try {
-            String token = userService.autenticate(authUserDTO.email(), authUserDTO.password());
-            return ResponseEntity.ok().body(new TokenDTO(token));
-        } catch(Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> authenticate(@RequestBody AuthUserDTO authUserDTO) {
+        String token = userService.autenticate(authUserDTO.email(), authUserDTO.password());
+        return ResponseEntity.ok().body(new TokenDTO(token));
     }
 
 }

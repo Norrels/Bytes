@@ -3,6 +3,7 @@ package com.bytes.bytes.contexts.kitchen.application.useCases.user;
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.TokenProviderPort;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
+import com.bytes.bytes.exceptions.BusinessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -21,10 +22,10 @@ public class AuthenticateUserUseCase {
     public String execute(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .filter(u -> passwordEncoder.matches(password, u.getPassword()))
-                .orElseThrow(() -> new RuntimeException("Email ou senha incorretos"));
+                .orElseThrow(() -> new BusinessException("Email ou senha incorretos"));
 
         if (!user.isActive()) {
-            throw new RuntimeException("Usuário inativo");
+            throw new BusinessException("Usuário inativo");
         }
 
         return tokenProviderPort.generate(user.getId().toString(), List.of(user.getRole().toString()));

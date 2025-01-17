@@ -1,5 +1,7 @@
 package com.bytes.bytes.infra.config;
 
+import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
+import com.bytes.bytes.contexts.kitchen.domain.models.UserRole;
 import com.bytes.bytes.exceptions.BusinessException;
 import com.bytes.bytes.exceptions.ErrorMessageResponse;
 import com.bytes.bytes.exceptions.ErrorValidationField;
@@ -18,7 +20,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Hidden
 @ControllerAdvice
@@ -71,8 +75,17 @@ public class ExceptionHandlerController {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(new ErrorValidationField(
-                            "Categoria",
-                            "Categoria inválida. Valores permitidos: ACOMPANHAMENTO, SOBREMESA, BEBIDA, LANCHE"
+                            "Category",
+                            "Categoria inválida, valores permitidos: " + enumValues(ProductCategory.values())
+                    ));
+        }
+
+        if (errorMessage.contains("UserRole")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorValidationField(
+                            "Role",
+                            "Cargo inválido, valores permitidos: " + enumValues(UserRole.values())
                     ));
         }
 
@@ -111,6 +124,11 @@ public class ExceptionHandlerController {
                 .body(new ErrorMessageResponse("Erro interno do servidor"));
     }
 
+  public String enumValues(Enum<?>[] values) {
+        return Arrays.stream(values)
+                .map(Enum::name)
+                .collect(Collectors.joining(", "));
+    }
 }
 
 

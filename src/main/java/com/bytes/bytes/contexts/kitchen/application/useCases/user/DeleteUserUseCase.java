@@ -1,8 +1,8 @@
 package com.bytes.bytes.contexts.kitchen.application.useCases.user;
 
-import com.bytes.bytes.contexts.kitchen.domain.execeptions.UserNotFoundException;
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.UserRepositoryPort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 public class DeleteUserUseCase {
     private final UserRepositoryPort userRepository;
@@ -12,7 +12,7 @@ public class DeleteUserUseCase {
     }
 
     public User execute(Long id) {
-        User user = userRepository.findById(id).orElseThrow(UserNotFoundException::new);
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado"));
         user.setActive(false);
         return userRepository.save(user);
     }
