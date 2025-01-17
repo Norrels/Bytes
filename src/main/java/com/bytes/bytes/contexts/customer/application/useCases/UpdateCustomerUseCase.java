@@ -1,8 +1,8 @@
 package com.bytes.bytes.contexts.customer.application.useCases;
 
-import com.bytes.bytes.contexts.customer.domain.CustomerNotFound;
 import com.bytes.bytes.contexts.customer.domain.models.Customer;
 import com.bytes.bytes.contexts.customer.domain.ports.outbound.CustomerRepositoryPort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 public class UpdateCustomerUseCase {
     private final CustomerRepositoryPort customerRepository;
@@ -12,7 +12,7 @@ public class UpdateCustomerUseCase {
     }
 
     public Customer execute(Long id, Customer customerToUpdate) {
-        Customer customer = customerRepository.findById(id).orElseThrow(CustomerNotFound::new);
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
 
         if (!customer.getEmail().equals(customerToUpdate.getEmail()) && customerRepository.existsByEmail(customerToUpdate.getEmail())) {
             throw new RuntimeException("Este email já está em uso");

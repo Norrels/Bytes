@@ -1,7 +1,7 @@
 package com.bytes.bytes.contexts.customer.application.useCases;
 
-import com.bytes.bytes.contexts.customer.domain.CustomerNotFound;
 import com.bytes.bytes.contexts.customer.domain.ports.outbound.CustomerRepositoryPort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 public class DeleteCustomerUseCase {
     private final CustomerRepositoryPort customerRepository;
@@ -11,7 +11,7 @@ public class DeleteCustomerUseCase {
     }
 
     public void execute(Long id) {
-        customerRepository.findById(id).orElseThrow(CustomerNotFound::new);
+        customerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cliente não encontrado"));
         customerRepository.delete(id);
     }
 }
