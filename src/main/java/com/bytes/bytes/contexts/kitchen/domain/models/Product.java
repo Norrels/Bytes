@@ -113,7 +113,7 @@ public class Product {
         }
 
         if(createdById == null){
-            throw new IllegalArgumentException("É preciso informa o id do usuário que está criando o produto");
+            throw new IllegalArgumentException("É preciso informa o id do usuário que está criou o produto");
         }
     }
 }

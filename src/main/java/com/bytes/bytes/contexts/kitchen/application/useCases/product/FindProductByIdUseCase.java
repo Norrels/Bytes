@@ -1,23 +1,21 @@
 package com.bytes.bytes.contexts.kitchen.application.useCases.product;
 
+import com.bytes.bytes.contexts.kitchen.domain.models.Product;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ProductRepositoryPort;
 import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
 import com.bytes.bytes.contexts.shared.dtos.ProductDTO;
 import com.bytes.bytes.contexts.shared.useCases.FindProductByIdUseCasePort;
+import com.bytes.bytes.exceptions.BusinessException;
 
-public class FindProductByIdUseCase implements FindProductByIdUseCasePort {
+public class FindProductByIdUseCase {
 
     private final ProductRepositoryPort productRepository;
 
-    private final ProductMapper productMapper;
-
-    public FindProductByIdUseCase(ProductRepositoryPort productRepository, ProductMapper productMapper) {
+    public FindProductByIdUseCase(ProductRepositoryPort productRepository) {
         this.productRepository = productRepository;
-        this.productMapper = productMapper;
     }
 
-    @Override
-    public ProductDTO execute(Long id) {
-        return productRepository.findById(id).map(productMapper::toProductDTO).orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+    public Product execute(Long id) {
+        return productRepository.findById(id).orElseThrow(() -> new BusinessException("Produto não encontrado"));
     }
 }

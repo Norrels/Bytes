@@ -3,6 +3,7 @@ package com.bytes.bytes.contexts.kitchen.application.useCases.product;
 import com.bytes.bytes.contexts.kitchen.domain.execeptions.ProductNotFoundException;
 import com.bytes.bytes.contexts.kitchen.domain.models.Product;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ProductRepositoryPort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 public class UpdateProductImageUseCase {
     private final ProductRepositoryPort productRepository;
@@ -12,7 +13,7 @@ public class UpdateProductImageUseCase {
     }
 
     public Product execute(Long id, String imageUrl) {
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
         product.setImgUrl(imageUrl);
         productRepository.save(product);
         return product;

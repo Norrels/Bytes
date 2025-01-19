@@ -4,6 +4,7 @@ import com.bytes.bytes.contexts.kitchen.domain.execeptions.ProductNotFoundExcept
 import com.bytes.bytes.contexts.kitchen.domain.models.Product;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ProductRepositoryPort;
 import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 
 public class UpdateProductUseCase {
@@ -14,7 +15,7 @@ public class UpdateProductUseCase {
     }
 
     public Product execute(Long id, Product productToUpdate) {
-        Product product = productRepository.findById(id).orElseThrow(ProductNotFoundException::new);
+        Product product = productRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado"));
         product.update(productToUpdate);
         productRepository.save(product);
         return product;

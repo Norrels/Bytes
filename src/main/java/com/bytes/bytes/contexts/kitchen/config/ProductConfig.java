@@ -32,8 +32,13 @@ public class ProductConfig {
     }
 
     @Bean
-    public FindProductByIdUseCase findProductByIdUseCase(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper) {
-        return new FindProductByIdUseCase(productRepositoryPort, productMapper);
+    public FindProductDTOByIdUseCase findProductDTOByIdUseCase(ProductRepositoryPort productRepositoryPort, ProductMapper productMapper) {
+        return new FindProductDTOByIdUseCase(productRepositoryPort, productMapper);
+    }
+
+    @Bean
+    public FindProductByIdUseCase findProductByIdUseCase(ProductRepositoryPort productRepositoryPort) {
+        return new FindProductByIdUseCase(productRepositoryPort);
     }
 
     @Bean
@@ -42,7 +47,7 @@ public class ProductConfig {
     }
 
     @Bean
-    public ProductService productService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase) {
-        return new ProductService(createProductUseCase, updateProductUseCase, deleteProductUseCase, findProductByCategoryUseCase, updateProductImageUseCase);
+    public ProductService productService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase, FindProductByIdUseCase findProductByIdUseCase) {
+        return new ProductService(createProductUseCase, updateProductUseCase, deleteProductUseCase, findProductByCategoryUseCase, updateProductImageUseCase, findProductByIdUseCase);
     }
 }

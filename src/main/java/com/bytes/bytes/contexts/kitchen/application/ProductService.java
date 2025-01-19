@@ -14,13 +14,16 @@ public class ProductService implements ProductServicePort {
     private final DeleteProductUseCase deleteProductUseCase;
     private final FindProductByCategoryUseCase findProductByCategoryUseCase;
     private final UpdateProductImageUseCase updateProductImageUseCase;
+    private final FindProductByIdUseCase findProductByIdUseCase;
 
-    public ProductService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase) {
+
+    public ProductService(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, DeleteProductUseCase deleteProductUseCase, FindProductByCategoryUseCase findProductByCategoryUseCase, UpdateProductImageUseCase updateProductImageUseCase, FindProductByIdUseCase findProductByIdUseCase) {
         this.createProductUseCase = createProductUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.deleteProductUseCase = deleteProductUseCase;
         this.findProductByCategoryUseCase = findProductByCategoryUseCase;
         this.updateProductImageUseCase = updateProductImageUseCase;
+        this.findProductByIdUseCase = findProductByIdUseCase;
     }
 
     @Override
@@ -46,5 +49,10 @@ public class ProductService implements ProductServicePort {
     @Override
     public Product updateImageUrl(Long productId, String imageUrl) {
         return updateProductImageUseCase.execute(productId, imageUrl);
+    }
+
+    @Override
+    public Product findProductById(Long id) {
+        return findProductByIdUseCase.execute(id);
     }
 }

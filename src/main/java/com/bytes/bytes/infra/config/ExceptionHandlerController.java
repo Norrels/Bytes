@@ -117,6 +117,13 @@ public class ExceptionHandlerController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessageResponse> handleRunTimeException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(new ErrorMessageResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessageResponse> handleGenericException(Exception ex) {
         return ResponseEntity

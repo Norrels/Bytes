@@ -6,7 +6,9 @@ import com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos.UserRequest;
 import com.bytes.bytes.contexts.kitchen.application.UserService;
 import com.bytes.bytes.contexts.kitchen.domain.models.User;
 import com.bytes.bytes.contexts.kitchen.utils.UserMapper;
+import com.bytes.bytes.contexts.shared.dtos.ApiResponseDTO;
 import com.bytes.bytes.exceptions.ErrorMessageResponse;
+import com.cloudinary.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -19,6 +21,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @Tag(name = "User", description = "Controle de usuários do estabelicimento")
@@ -74,7 +79,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = TokenDTO.class)
+                    schema = @Schema(implementation = ApiResponseDTO.class)
             )),
             @ApiResponse(responseCode = "404", ref = "NotFoundResource"),
             @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
@@ -83,7 +88,7 @@ public class UserController {
     @PutMapping("disable/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         userService.delete(id);
-        return ResponseEntity.ok().body("Usuário desativado com sucesso");
+        return ResponseEntity.ok().body(new ApiResponseDTO("Usuário desativado com sucesso"));
     }
 
     @Operation(summary = "Autentica usuário")

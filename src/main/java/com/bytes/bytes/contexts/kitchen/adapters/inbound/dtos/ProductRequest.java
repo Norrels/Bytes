@@ -2,10 +2,7 @@ package com.bytes.bytes.contexts.kitchen.adapters.inbound.dtos;
 
 import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
 import com.bytes.bytes.contexts.kitchen.domain.models.UserRole;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -16,7 +13,8 @@ public class ProductRequest {
     @Size(min = 2, max = 100, message = "Nome deve ter entre 2 e 100 caracteres")
     private String name;
 
-    @NotNull(message = "E-mail é obrigatório")
+    @NotNull(message = "O preço do produto é obrigatório")
+    @Positive(message = "O preço precisa ser maior que zero")
     private BigDecimal price;
 
     @NotNull(message = "A categoria é obrigatória")

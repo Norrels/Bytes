@@ -15,4 +15,6 @@ public interface ProductServicePort {
     List<Product> findProductByCategory(ProductCategory category);
 
     Product updateImageUrl(Long productId, String imageUrl);
+
+    Product findProductById(Long id);
 }

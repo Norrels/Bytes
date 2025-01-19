@@ -47,7 +47,7 @@ public class SecurityUserFilter extends OncePerRequestFilter {
                 return;
             }
 
-            request.setAttribute("user_id", token);
+            request.setAttribute("user_id", token.getSubject());
             var roles = token.getClaim("roles").asList(String.class);
 
             var grants = roles.stream()
