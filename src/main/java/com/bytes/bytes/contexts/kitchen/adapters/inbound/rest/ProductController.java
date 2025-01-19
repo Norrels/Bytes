@@ -28,7 +28,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/kitchen/product")
 public class ProductController {
     private final ProductService productService;
-
     private final ImageServicePort imageService;
     private final ProductMapper productMapper;
 

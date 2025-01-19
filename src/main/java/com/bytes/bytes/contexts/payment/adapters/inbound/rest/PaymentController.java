@@ -1,12 +1,21 @@
 package com.bytes.bytes.contexts.payment.adapters.inbound.rest;
 
+import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.payment.adapters.inbound.dtos.PaymentDTO;
 import com.bytes.bytes.contexts.payment.application.PaymentService;
 import com.bytes.bytes.contexts.payment.domain.models.Payment;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/payment")
@@ -19,24 +28,37 @@ public class PaymentController {
     }
 
     @PostMapping("/{orderId}/pay")
+    @SecurityRequirement(name = "jwt_auth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Payment.class)
+            )),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
     @Operation(summary = "Realizar pagamento")
-    public ResponseEntity<Object> payOrder(@PathVariable Long orderId, @RequestBody PaymentDTO paymentOrder){
-        try {
-            Payment payment = paymentService.create(new Payment(null, orderId, paymentOrder.getPaymentType(), paymentOrder.getTotal(), paymentOrder.getExternal_id()));
-            return ResponseEntity.ok().body(payment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> payOrder(@PathVariable Long orderId, @RequestBody PaymentDTO paymentOrder) {
+        Payment payment = paymentService.create(new Payment(null, orderId, paymentOrder.getPaymentType(), paymentOrder.getTotal(), paymentOrder.getExternal_id()));
+        return ResponseEntity.ok().body(payment);
     }
 
     @PostMapping("/{orderId}/status")
-    @Operation(summary = "Verificar status do pagamento")
-    public ResponseEntity<Object> statusOrder(@PathVariable Long orderId){
-        try {
-            Payment payment = paymentService.findByOrderId(orderId);
-            return ResponseEntity.ok(payment);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(404).body(e.getMessage());
-        }
+    @SecurityRequirement(name = "jwt_auth")
+    @Operation(summary = "Verificar status do pagamento, no integrador")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(type = "object", example = "{\"status\": \"PAIED\"}")
+            )),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
+    public ResponseEntity<Object> statusOrder(@PathVariable Long orderId) {
+        paymentService.findByOrderId(orderId);
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "PAIED");
+        return ResponseEntity.ok(response);
     }
 }

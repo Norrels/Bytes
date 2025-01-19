@@ -1,5 +1,6 @@
 package com.bytes.bytes.contexts.order.domain.models;
 
+import com.bytes.bytes.exceptions.BusinessException;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -73,11 +74,11 @@ public class Order {
 
     public void updateStatus(OrderStatus status, Long modifyById) {
         if(status == OrderStatus.WAITING_PAYMENT || status == OrderStatus.CANCELED) {
-            throw new RuntimeException("Operação invalída");
+            throw new BusinessException("Operação invalída");
         }
 
         if(this.status == OrderStatus.WAITING_PAYMENT) {
-            throw new RuntimeException("Não é possível alterar o status do pedido que ainda não foi pago");
+            throw new BusinessException("Não é possível alterar o status do pedido que ainda não foi pago");
         }
 
         if(modifyById == null) {
@@ -91,7 +92,7 @@ public class Order {
 
     public void pay(){
         if(this.status != OrderStatus.WAITING_PAYMENT) {
-            throw new RuntimeException("Esse pedido já foi pago");
+            throw new BusinessException("Esse pedido já foi pago");
         }
 
         this.status = OrderStatus.RECEIVED;
@@ -100,7 +101,7 @@ public class Order {
 
     public void cancel(){
         if(this.status == OrderStatus.FINISHED) {
-            throw new RuntimeException("Esse pedido já foi finalizado");
+            throw new BusinessException("Esse pedido já foi finalizado");
         }
 
         this.status = OrderStatus.CANCELED;

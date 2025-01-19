@@ -1,8 +1,8 @@
 package com.bytes.bytes.contexts.order.application.useCases;
 
-import com.bytes.bytes.contexts.order.domain.exeception.OrderNotFoundException;
 import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.order.domain.ports.outbound.OrderRepositoryPort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 public class GetOrderByIdUseCase {
     private final OrderRepositoryPort orderRepositoryPort;
@@ -12,6 +12,6 @@ public class GetOrderByIdUseCase {
     }
 
     public Order execute(Long id) {
-        return orderRepositoryPort.findById(id).orElseThrow(OrderNotFoundException::new);
+        return orderRepositoryPort.findById(id).orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado"));
     }
 }

@@ -1,9 +1,7 @@
 package com.bytes.bytes.contexts.kitchen.application.useCases.product;
 
-import com.bytes.bytes.contexts.kitchen.domain.execeptions.ProductNotFoundException;
 import com.bytes.bytes.contexts.kitchen.domain.models.Product;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ProductRepositoryPort;
-import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
 import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 

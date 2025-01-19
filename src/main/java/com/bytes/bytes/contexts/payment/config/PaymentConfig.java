@@ -4,7 +4,6 @@ import com.bytes.bytes.contexts.payment.application.PaymentService;
 import com.bytes.bytes.contexts.payment.application.useCases.CreatePaymentUseCase;
 import com.bytes.bytes.contexts.payment.application.useCases.FindPaymentByOrderIdUseCase;
 import com.bytes.bytes.contexts.payment.domain.port.oubound.PaymentRepositoryPort;
-import com.bytes.bytes.contexts.shared.useCases.GetOrderDTOByIdUseCasePort;
 import com.bytes.bytes.contexts.shared.useCases.PayOrderUseCasePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +20,7 @@ public class PaymentConfig {
     }
 
     @Bean
-    public PaymentService paymentService(CreatePaymentUseCase createPaymentUseCase, FindPaymentByOrderIdUseCase findPaymentByOrderIdUseCase, GetOrderDTOByIdUseCasePort getOrderDTOByIdUseCasePort, PayOrderUseCasePort payOrderUseCasePort) {
-        return new PaymentService(createPaymentUseCase, findPaymentByOrderIdUseCase, getOrderDTOByIdUseCasePort, payOrderUseCasePort);
+    public PaymentService paymentService(CreatePaymentUseCase createPaymentUseCase, FindPaymentByOrderIdUseCase findPaymentByOrderIdUseCase, PayOrderUseCasePort payOrderUseCasePort) {
+        return new PaymentService(createPaymentUseCase, findPaymentByOrderIdUseCase, payOrderUseCasePort);
     }
 }

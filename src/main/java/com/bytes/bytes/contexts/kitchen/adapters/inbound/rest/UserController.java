@@ -22,9 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @RestController
 @Tag(name = "User", description = "Controle de usuários do estabelicimento")
 @RequestMapping("/kitchen/user")
@@ -97,9 +94,9 @@ public class UserController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = TokenDTO.class)
             )),
-            @ApiResponse(responseCode = "422", content = @Content(
-                    schema = @Schema(implementation = ErrorMessageResponse.class),
-                    examples = @ExampleObject(value = "{\"message\": \"Usuário inativo\"}")))
+//            @ApiResponse(responseCode = "422", content = @Content(
+//                    schema = @Schema(implementation = ErrorMessageResponse.class),
+//                    examples = @ExampleObject(value = "{\"message\": \"Usuário inativo\"}")))
     })
     @PostMapping("authenticate")
     public ResponseEntity<Object> authenticate(@RequestBody AuthUserDTO authUserDTO) {

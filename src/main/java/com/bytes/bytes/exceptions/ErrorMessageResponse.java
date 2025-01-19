@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Schema(name = "ErrorMessageResponse", description = "Representa a estrutura de um erro no sistema")
+@Schema(description = "Representa a estrutura de um erro no sistema")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

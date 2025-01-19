@@ -2,9 +2,6 @@ package com.bytes.bytes.contexts.kitchen.application.useCases.product;
 
 import com.bytes.bytes.contexts.kitchen.domain.models.Product;
 import com.bytes.bytes.contexts.kitchen.domain.port.outbound.ProductRepositoryPort;
-import com.bytes.bytes.contexts.kitchen.utils.ProductMapper;
-import com.bytes.bytes.contexts.shared.dtos.ProductDTO;
-import com.bytes.bytes.contexts.shared.useCases.FindProductByIdUseCasePort;
 import com.bytes.bytes.exceptions.BusinessException;
 
 public class FindProductByIdUseCase {

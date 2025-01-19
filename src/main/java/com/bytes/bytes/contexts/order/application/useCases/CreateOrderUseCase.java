@@ -6,6 +6,7 @@ import com.bytes.bytes.contexts.order.domain.models.dtos.CreateOrderDTO;
 import com.bytes.bytes.contexts.order.domain.ports.outbound.OrderRepositoryPort;
 import com.bytes.bytes.contexts.shared.useCases.CustomerExistsUseCasePort;
 import com.bytes.bytes.contexts.shared.useCases.FindProductByIdUseCasePort;
+import com.bytes.bytes.exceptions.ResourceNotFoundException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class CreateOrderUseCase {
     // poderia ser só uma lista de OrderItemDTO
     public Order execute(CreateOrderDTO order) {
         if(order.clientId() != null && !findUserByIdUseCase.execute(order.clientId())) {
-            throw new RuntimeException("Cliente não encontrado");
+            throw new ResourceNotFoundException("Cliente não encontrado");
         }
 
         List<OrderItem> orderItens = order.itens().stream().map(orderItem -> {
@@ -31,7 +32,7 @@ public class CreateOrderUseCase {
             return new OrderItem(product.getName(), product.getImgUrl(), product.getPrice(), product.getCategory().toString(), product.getDescription(), orderItem.quantity(), product.getObservation(), product.getId());
         }).toList();
 
-        Order newOrder =  orderRepositoryPort.save(new Order(order.clientId(), orderItens));
+        Order newOrder = orderRepositoryPort.save(new Order(order.clientId(), orderItens));
         newOrder.assignOrderIdToItems();
 
         return orderRepositoryPort.save(newOrder);

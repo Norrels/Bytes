@@ -5,8 +5,13 @@ import com.bytes.bytes.contexts.order.application.OrderService;
 import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.order.domain.models.dtos.CreateOrderDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,48 +27,68 @@ public class OrderController {
 
     @Operation(summary = "Cria pedido")
     @PostMapping()
-    public ResponseEntity<Object> createOrder(@RequestBody CreateOrderDTO order){
-        try {
-            Order newOrder = orderService.createOrder(order);
-            return ResponseEntity.ok().body(newOrder);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Order.class)
+            )),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
+    public ResponseEntity<Object> createOrder(@RequestBody CreateOrderDTO order) {
+        Order newOrder = orderService.createOrder(order);
+        return ResponseEntity.ok().body(newOrder);
     }
 
     @Operation(summary = "Atualiza pedido")
     @PutMapping("/status")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Order.class)
+            )),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
     @SecurityRequirement(name = "jwt_auth")
-    public ResponseEntity<Object> updateStatus(@RequestBody UpdateOrderReq order){
-        try {
-            orderService.updateStatus(order.id(), order.status(), order.modifyById());
-            return ResponseEntity.ok().body(order);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> updateStatus(@RequestBody UpdateOrderReq order, HttpServletRequest request) {
+        var usedId = Long.parseLong(request.getAttribute("user_id").toString());
+        orderService.updateStatus(order.id(), order.status(), usedId);
+        return ResponseEntity.ok().body(order);
     }
 
     @Operation(summary = "Cancela pedido")
+    @SecurityRequirement(name = "jwt_auth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Order.class)
+            )),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<Object> cancel(@PathVariable Long id, @RequestBody Long modifyById){
-        try {
-            orderService.cancelOrder(id, modifyById);
-            return ResponseEntity.ok().body("");
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> cancel(@PathVariable Long id, HttpServletRequest request) {
+        var usedId = Long.parseLong(request.getAttribute("user_id").toString());
+        orderService.cancelOrder(id, usedId);
+        return ResponseEntity.ok().build();
     }
-
 
     @Operation(summary = "Busca pedido por id")
     @SecurityRequirement(name = "jwt_auth")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Operação realizada com sucesso", content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = Order.class)
+            )),
+            @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "404", ref = "NotFoundResource")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getById(@PathVariable Long id){
-        try {
-            Order order = orderService.getOrderById(id);
-            return ResponseEntity.ok().body(order);
-        } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    public ResponseEntity<Object> getById(@PathVariable Long id) {
+        Order order = orderService.getOrderById(id);
+        return ResponseEntity.ok().body(order);
+
     }
 }

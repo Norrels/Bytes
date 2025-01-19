@@ -9,13 +9,11 @@ import com.bytes.bytes.contexts.shared.useCases.*;
 public class PaymentService implements PaymentServicePort {
     private final CreatePaymentUseCase createPaymentUseCase;
     private final FindPaymentByOrderIdUseCase findPaymentByOrderIdUseCase;
-    private final GetOrderDTOByIdUseCasePort getOrderDTOByIdUseCase;
     private final PayOrderUseCasePort payOrderUseCase;
 
-    public PaymentService(CreatePaymentUseCase createPaymentUseCase, FindPaymentByOrderIdUseCase findPaymentByOrderIdUseCase, GetOrderDTOByIdUseCasePort getOrderDTOByIdUseCase, PayOrderUseCasePort payOrderUseCase) {
+    public PaymentService(CreatePaymentUseCase createPaymentUseCase, FindPaymentByOrderIdUseCase findPaymentByOrderIdUseCase, PayOrderUseCasePort payOrderUseCase) {
         this.createPaymentUseCase = createPaymentUseCase;
         this.findPaymentByOrderIdUseCase = findPaymentByOrderIdUseCase;
-        this.getOrderDTOByIdUseCase = getOrderDTOByIdUseCase;
         this.payOrderUseCase = payOrderUseCase;
     }
 

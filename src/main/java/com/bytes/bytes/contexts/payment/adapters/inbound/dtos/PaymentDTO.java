@@ -17,5 +17,4 @@ public class PaymentDTO {
         private PaymentType paymentType;
         private BigDecimal total;
         private Long external_id;
-
 }
