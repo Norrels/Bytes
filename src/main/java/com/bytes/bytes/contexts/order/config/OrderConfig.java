@@ -43,7 +43,12 @@ public class OrderConfig {
     }
 
     @Bean
-    public OrderService orderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase) {
-        return new OrderService(createOrderUseCase, getOrderByIdUseCase, cancelOrderUseCase, updateOrderStatusUseCase);
+    public GetOrdersByStatusUseCase getOrdersByStatusUseCase(OrderRepositoryPort orderRepositoryPort){
+        return new GetOrdersByStatusUseCase(orderRepositoryPort);
+    }
+
+    @Bean
+    public OrderService orderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase, GetOrdersByStatusUseCase getOrdersByStatusUseCase) {
+        return new OrderService(createOrderUseCase, getOrderByIdUseCase, cancelOrderUseCase, updateOrderStatusUseCase, getOrdersByStatusUseCase);
     }
 }

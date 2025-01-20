@@ -6,17 +6,22 @@ import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.order.domain.models.OrderStatus;
 import com.bytes.bytes.contexts.order.domain.ports.inbound.OrderServicePort;
 
+import java.util.List;
+
 public class OrderService implements OrderServicePort {
     private final CreateOrderUseCase createOrderUseCase;
     private final GetOrderByIdUseCase getOrderByIdUseCase;
     private final CancelOrderUseCase cancelOrderUseCase;
     private final UpdateOrderStatusUseCase updateOrderStatusUseCase;
 
-    public OrderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase) {
+    private final GetOrdersByStatusUseCase getOrdersByStatusUseCase;
+
+    public OrderService(CreateOrderUseCase createOrderUseCase, GetOrderByIdUseCase getOrderByIdUseCase, CancelOrderUseCase cancelOrderUseCase, UpdateOrderStatusUseCase updateOrderStatusUseCase, GetOrdersByStatusUseCase getOrdersByStatusUseCase) {
         this.createOrderUseCase = createOrderUseCase;
         this.getOrderByIdUseCase = getOrderByIdUseCase;
         this.cancelOrderUseCase = cancelOrderUseCase;
         this.updateOrderStatusUseCase = updateOrderStatusUseCase;
+        this.getOrdersByStatusUseCase = getOrdersByStatusUseCase;
     }
     @Override
     public Order createOrder(CreateOrderDTO order) {
@@ -36,5 +41,10 @@ public class OrderService implements OrderServicePort {
     @Override
     public void updateStatus(Long id, OrderStatus status, Long modifyById) {
         updateOrderStatusUseCase.execute(id, status, modifyById);
+    }
+
+    @Override
+    public List<Order> findOrderByStatus(OrderStatus status) {
+        return getOrdersByStatusUseCase.execute(status);
     }
 }

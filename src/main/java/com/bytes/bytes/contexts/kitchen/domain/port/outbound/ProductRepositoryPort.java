@@ -13,5 +13,6 @@ public interface ProductRepositoryPort {
     Optional<Product> findById(Long id);
 
     List<Product> findByCategory(ProductCategory category);
+
     void delete(Long id);
 }
