@@ -94,9 +94,7 @@ public class UserController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = TokenDTO.class)
             )),
-//            @ApiResponse(responseCode = "422", content = @Content(
-//                    schema = @Schema(implementation = ErrorMessageResponse.class),
-//                    examples = @ExampleObject(value = "{\"message\": \"Usuário inativo\"}")))
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
     })
     @PostMapping("authenticate")
     public ResponseEntity<Object> authenticate(@RequestBody AuthUserDTO authUserDTO) {

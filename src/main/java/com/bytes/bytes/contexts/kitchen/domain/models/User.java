@@ -10,6 +10,15 @@ public class User {
 
     public User() {}
 
+    public User(Long id, String name, String email, UserRole role, String password, boolean active) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.role = role;
+        this.password = password;
+        this.active = active;
+    }
+
     public Long getId() {
         return id;
     }

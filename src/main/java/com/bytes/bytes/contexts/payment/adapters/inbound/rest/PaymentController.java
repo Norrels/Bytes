@@ -4,6 +4,7 @@ import com.bytes.bytes.contexts.order.domain.models.Order;
 import com.bytes.bytes.contexts.payment.adapters.inbound.dtos.PaymentDTO;
 import com.bytes.bytes.contexts.payment.application.PaymentService;
 import com.bytes.bytes.contexts.payment.domain.models.Payment;
+import com.bytes.bytes.exceptions.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/payment")
@@ -40,11 +42,14 @@ public class PaymentController {
     })
     @Operation(summary = "Realizar pagamento")
     public ResponseEntity<Object> payOrder(@PathVariable Long orderId, @RequestBody PaymentDTO paymentOrder) {
+        if(!Objects.equals(paymentOrder.getOrder_id(), orderId)){
+            throw new BusinessException("O id do pedido é diferente do id passado como paramêtro");
+        }
         Payment payment = paymentService.create(new Payment(null, orderId, paymentOrder.getPaymentType(), paymentOrder.getTotal(), paymentOrder.getExternal_id()));
         return ResponseEntity.ok().body(payment);
     }
 
-    @PostMapping("/{orderId}/status")
+    @GetMapping("/{orderId}/status")
     @SecurityRequirement(name = "jwt_auth")
     @Operation(summary = "Verificar status do pagamento, no integrador")
     @ApiResponses({

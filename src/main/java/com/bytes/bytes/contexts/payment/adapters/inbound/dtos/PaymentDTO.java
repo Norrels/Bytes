@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Data
 public class PaymentDTO {
-        private Long id;
         private Long order_id;
         private PaymentType paymentType;
         private BigDecimal total;

@@ -65,7 +65,6 @@ public class ProductController {
             @ApiResponse(responseCode = "400", ref = "Validation"),
             @ApiResponse(responseCode = "404", ref = "NotFoundResource"),
             @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
-            @ApiResponse(responseCode = "422", ref = "BusinessError"),
     })
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateProduct(@PathVariable Long id, @Valid @RequestBody ProductRequest productRequest, HttpServletRequest request) {
@@ -82,7 +81,6 @@ public class ProductController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = ApiResponseDTO.class)
             )),
-            @ApiResponse(responseCode = "422", ref = "BusinessError"),
             @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
             @ApiResponse(responseCode = "404", ref = "NotFoundResource")
     })
@@ -111,7 +109,7 @@ public class ProductController {
                     mediaType = "application/json",
                     schema = @Schema(implementation = Product.class)
             )),
-            @ApiResponse(responseCode = "422", ref = "BusinessError"),
+
             @ApiResponse(responseCode = "403", ref = "ForbiddenAdmin"),
             @ApiResponse(responseCode = "404", ref = "NotFoundResource")
     })

@@ -21,6 +21,7 @@ public class UserRequest {
     @Size(min = 8, max = 255, message = "Senha deve ter no mínimo 8 caracteres")
     private String password;
 
-    @NotNull(message = "Função do usuário é obrigatória")
-    private UserRole role;
+    @NotBlank(message = "CPF é obrigatório")
+    @Size(min = 12, max = 12, message = "O CPF deve ter no mínimo 11 caracteres")
+    private String cpf;
 }

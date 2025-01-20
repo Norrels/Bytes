@@ -19,8 +19,9 @@ public class PaymentService implements PaymentServicePort {
 
     @Override
     public Payment create(Payment payment) {
+        Payment newPayment = createPaymentUseCase.execute(payment);
         payOrderUseCase.execute(payment.getOrderId());
-        return createPaymentUseCase.execute(payment);
+        return newPayment;
     }
 
     @Override

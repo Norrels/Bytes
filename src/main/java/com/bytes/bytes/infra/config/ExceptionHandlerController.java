@@ -2,6 +2,7 @@ package com.bytes.bytes.infra.config;
 
 import com.bytes.bytes.contexts.kitchen.domain.models.ProductCategory;
 import com.bytes.bytes.contexts.kitchen.domain.models.UserRole;
+import com.bytes.bytes.contexts.payment.domain.models.PaymentType;
 import com.bytes.bytes.exceptions.BusinessException;
 import com.bytes.bytes.exceptions.ErrorMessageResponse;
 import com.bytes.bytes.exceptions.ErrorValidationField;
@@ -86,6 +87,25 @@ public class ExceptionHandlerController {
                     .body(new ErrorValidationField(
                             "Role",
                             "Cargo inválido, valores permitidos: " + enumValues(UserRole.values())
+                    ));
+        }
+
+        if (errorMessage.contains("PaymentType")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorValidationField(
+                            "PaymentType",
+                            "Tipo de pagamento inválido, valores permitidos: " + enumValues(PaymentType.values())
+                    ));
+        }
+
+
+        if (errorMessage.contains("OrderStatus")) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorValidationField(
+                            "status",
+                            "Tipo de pagamento inválido, valores permitidos: PREPARING, FINISHED, ALREADY"
                     ));
         }
 

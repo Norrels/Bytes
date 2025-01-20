@@ -18,18 +18,18 @@ public class PaymentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "O Id do pedido é obrigatório")
     private Long orderId;
 
     @Enumerated
     private PaymentType paymentType;
 
-    @Positive
+    @Positive(message = "O valor precisa ser maior que zero")
     private BigDecimal total;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @NotNull
+    @NotNull(message = "O externa ID não pode ser nulo")
     private Long externalId;
 }

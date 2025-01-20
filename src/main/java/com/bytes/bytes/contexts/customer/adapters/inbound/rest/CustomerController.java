@@ -5,6 +5,7 @@ import com.bytes.bytes.contexts.customer.adapters.outbound.persistence.entity.Cu
 import com.bytes.bytes.contexts.customer.application.CustomerService;
 import com.bytes.bytes.contexts.customer.domain.models.Customer;
 import com.bytes.bytes.contexts.customer.mapper.CustomerMapper;
+import com.bytes.bytes.exceptions.BusinessException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -55,6 +56,7 @@ public class CustomerController {
                     schema = @Schema(implementation = Customer.class)
             )),
             @ApiResponse(responseCode = "403", ref = "Forbidden"),
+            @ApiResponse(responseCode = "422", ref = "BusinessError"),
             @ApiResponse(responseCode = "404", ref = "NotFoundResource")
     })
     @GetMapping("/{cpf}")
@@ -79,7 +81,7 @@ public class CustomerController {
     })
     public ResponseEntity<Object> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerEntity customerReq) {
             if (!Objects.equals(customerReq.getId(), id)) {
-                throw new RuntimeException("O id enviado no corpo e na url são diferentes");
+                throw new BusinessException("O id enviado no corpo e na url são diferentes");
             }
 
             Customer customer = customerService.update(id, customerMapper.toCustomer(customerReq));
